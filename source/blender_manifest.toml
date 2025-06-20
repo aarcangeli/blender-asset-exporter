@@ -1,0 +1,13 @@
+schema_version = "1.0.0"
+
+id = "blender_asset_exporter"
+version = "1.0.0"
+name = "Blender Asset Exporter"
+tagline = "Custom tool for exporting Blender assets to Unity"
+maintainer = "Alessandro Arcangeli <alessandroarcangeli.rm@gmail.com>"
+type = "add-on"
+blender_version_min = "4.3.0"
+
+license = [
+  "SPDX:GPL-3.0-or-later",
+]

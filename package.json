@@ -1,0 +1,13 @@
+{
+  "name": "aarcangeli.blender_asset_exporter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "blender --command extension build --source-dir=./source",
+    "watch": "yarn build && chokidar source/**/*.py -c \"yarn build\""
+  },
+  "dependencies": {
+    "chokidar-cli": "^3.0.0"
+  }
+}
