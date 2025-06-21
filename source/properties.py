@@ -27,6 +27,12 @@ class ObjectProperties(bpy.types.PropertyGroup):
         default=False,
     )
 
+    combine_child: bpy.props.BoolProperty(
+        name="Combine child meshes",
+        description="Combine child meshes into a single mesh for export",
+        default=False,
+    )
+
     vertex_animation: bpy.props.BoolProperty(
         name="Vertex Animation",
         description="Enable vertex animation export for this object",

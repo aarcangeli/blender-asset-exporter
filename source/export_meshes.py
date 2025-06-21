@@ -3,7 +3,7 @@ from pathlib import Path
 
 import bpy
 
-from .utils import run_in_object_mode
+from .utils import run_in_object_mode, combine_children, relevant_objects, FT_VertexAnimation
 from .vertex_animation import export_vertex_animation, remove_debug_meshes
 
 
@@ -34,26 +34,40 @@ class ExportAssets(bpy.types.Operator):
             props = mesh_object.export_properties
 
             with run_in_object_mode():
-                bpy.ops.object.select_all(action="DESELECT")
-                bpy.context.scene.frame_current = 0
+                temp_object = None
 
-                if props.vertex_animation:
-                    mesh_object = export_vertex_animation(context, mesh_object, export_path)
+                # Rename the mesh object temporarily to avoid conflicts
+                original_name = mesh_object.name
+                original_object = mesh_object
+                mesh_object.name = f"{original_name}__temp__"
 
-                mesh_object.select_set(True)
+                try:
+                    # bpy.context.scene.frame_current = 0
 
-                bpy.ops.export_scene.fbx(
-                    filepath=str(file_output),
-                    use_selection=True,
-                    object_types={"MESH"},
-                    apply_scale_options="FBX_SCALE_ALL",
-                    bake_space_transform=True,
-                    axis_forward="X",
-                    axis_up="Y",
-                )
+                    if props.combine_child:
+                        mesh_object = temp_object = combine_children(original_name, mesh_object)
 
-                if props.vertex_animation:
-                    bpy.data.objects.remove(mesh_object, do_unlink=True)
+                    if FT_VertexAnimation and props.vertex_animation:
+                        # Experimental feature
+                        mesh_object = export_vertex_animation(context, mesh_object, export_path)
+
+                    bpy.ops.object.select_all(action="DESELECT")
+                    mesh_object.select_set(True)
+
+                    bpy.ops.export_scene.fbx(
+                        filepath=str(file_output),
+                        use_selection=True,
+                        object_types={"MESH"},
+                        apply_scale_options="FBX_SCALE_ALL",
+                        bake_space_transform=True,
+                        axis_forward="X",
+                        axis_up="Y",
+                    )
+
+                finally:
+                    if temp_object:
+                        bpy.data.objects.remove(temp_object, do_unlink=True)
+                    original_object.name = original_name
 
         elapsed = time.time() - start
         bpy.context.workspace.status_text_set_internal(f"Exported {count} meshes in {elapsed:.2f} seconds.")
@@ -62,5 +76,5 @@ class ExportAssets(bpy.types.Operator):
 
 def list_meshes():
     """List all meshes in the current Blender scene."""
-    meshes = [obj for obj in bpy.data.objects if obj.type == "MESH" and obj.export_properties.enable_export]
+    meshes = [obj for obj in bpy.data.objects if obj.type in relevant_objects and obj.export_properties.enable_export]
     return sorted(meshes, key=lambda x: x.name.lower())
