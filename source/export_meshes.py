@@ -4,6 +4,7 @@ from pathlib import Path
 import bpy
 
 from .utils import run_in_object_mode
+from .vertex_animation import export_vertex_animation, remove_debug_meshes
 
 
 class ExportAssets(bpy.types.Operator):
@@ -19,19 +20,28 @@ class ExportAssets(bpy.types.Operator):
         start = time.time()
         props = context.scene.asset_settings
 
-        bpy.context.scene.frame_current = 0
         bpy.context.workspace.status_text_set_internal("Exporting assets...")
         export_path = Path(bpy.path.abspath(props.export_path))
 
+        remove_debug_meshes(context)
+
         count = 0
-        for mesh in list_meshes():
-            file_output = export_path / f"{mesh.name}.fbx"
-            self.report({"INFO"}, f"Exporting mesh: '{mesh.name}' to '{file_output}'")
+        for mesh_object in list_meshes():
+            file_output = export_path / f"{mesh_object.name}.fbx"
+            self.report({"INFO"}, f"Exporting mesh: '{mesh_object.name}' to '{file_output}'")
             count = count + 1
+
+            props = mesh_object.export_properties
 
             with run_in_object_mode():
                 bpy.ops.object.select_all(action="DESELECT")
-                mesh.select_set(True)
+                bpy.context.scene.frame_current = 0
+
+                if props.vertex_animation:
+                    mesh_object = export_vertex_animation(context, mesh_object, export_path)
+
+                mesh_object.select_set(True)
+
                 bpy.ops.export_scene.fbx(
                     filepath=str(file_output),
                     use_selection=True,
@@ -41,6 +51,9 @@ class ExportAssets(bpy.types.Operator):
                     axis_forward="X",
                     axis_up="Y",
                 )
+
+                if props.vertex_animation:
+                    bpy.data.objects.remove(mesh_object, do_unlink=True)
 
         elapsed = time.time() - start
         bpy.context.workspace.status_text_set_internal(f"Exported {count} meshes in {elapsed:.2f} seconds.")

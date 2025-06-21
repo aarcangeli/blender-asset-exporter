@@ -294,7 +294,7 @@ class AT_TrisToQuads(bpy.types.Operator):
         return {"FINISHED"}
 
 
-class AT_ArmatureTools(bpy.types.Panel):
+class AT_PT_ArmatureTools(bpy.types.Panel):
     bl_label = "Armature Tools"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -322,5 +322,5 @@ armature_classes = [
     AT_Constraint_Toogle,
     AT_SymmetrizeTool,
     AT_TrisToQuads,
-    AT_ArmatureTools,
+    AT_PT_ArmatureTools,
 ]

@@ -32,7 +32,21 @@ class VIEW3D_PT_AssetManager(bpy.types.Panel):
         if obj := get_active_mesh():
             layout.separator()
             layout.label(text=obj.name, icon="OBJECT_DATA")
-            layout.prop(obj.export_properties, "enable_export", text="Enable Export")
+            export_properties = obj.export_properties
+            layout.prop(export_properties, "enable_export")
+
+            layout = layout.column(align=True)
+            layout.enabled = export_properties.enable_export
+            layout.prop(export_properties, "vertex_animation")
+
+            scene = context.scene
+            layout.use_property_split = True
+            layout.use_property_decorate = False
+            col = layout.column(align=True)
+            col.enabled = export_properties.vertex_animation
+            col.prop(scene, "frame_start", text="Frame Start")
+            col.prop(scene, "frame_end", text="End")
+            col.prop(scene, "frame_step", text="Step")
 
 
 def get_active_mesh():

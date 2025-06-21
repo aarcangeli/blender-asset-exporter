@@ -19,6 +19,7 @@ def run_in_object_mode():
     active_object = bpy.context.view_layer.objects.active
     mode = active_object.mode if active_object else "OBJECT"
     bpy.ops.object.mode_set(mode="OBJECT")
+    old_frame = bpy.context.scene.frame_current
 
     yield
 
@@ -30,3 +31,5 @@ def run_in_object_mode():
     bpy.context.view_layer.objects.active = active_object
     if active_object and active_object.mode != mode:
         bpy.ops.object.mode_set(mode=mode)
+
+    bpy.context.scene.frame_current = old_frame

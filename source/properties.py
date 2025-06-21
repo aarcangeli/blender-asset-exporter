@@ -26,3 +26,9 @@ class ObjectProperties(bpy.types.PropertyGroup):
         description="Enable export for this object",
         default=False,
     )
+
+    vertex_animation: bpy.props.BoolProperty(
+        name="Vertex Animation",
+        description="Enable vertex animation export for this object",
+        default=False,
+    )
