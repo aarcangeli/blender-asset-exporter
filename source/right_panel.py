@@ -1,14 +1,15 @@
 import bpy
 
 from .export_meshes import ExportAssets
+from .utils import shelf_name
 
 
 class VIEW3D_PT_AssetManager(bpy.types.Panel):
     """Shows a panel in the "Edit" tab of the 3D View"""
 
-    bl_label = "Unity Asset"
+    bl_label = "Asset Exporter"
     bl_idname = "VIEW3D_PT_AssetManager"
-    bl_category = "Asset"
+    bl_category = shelf_name
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_options = set()

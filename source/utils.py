@@ -2,6 +2,8 @@ from contextlib import contextmanager
 
 import bpy
 
+shelf_name = "Tools"
+
 
 def show_message_box(message="", title="Message Box", icon="INFO"):
     def draw(self, context):

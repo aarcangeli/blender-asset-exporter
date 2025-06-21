@@ -1,5 +1,6 @@
 import bpy
 
+from .armature_tools import armature_classes
 from .properties import ExportSceneProperties, ObjectProperties
 from .right_panel import VIEW3D_PT_AssetManager
 from .export_meshes import ExportAssets
@@ -9,6 +10,7 @@ operator_classes = [
     VIEW3D_PT_AssetManager,
     ExportSceneProperties,
     ObjectProperties,
+    *armature_classes,
 ]
 
 

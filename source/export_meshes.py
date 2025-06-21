@@ -17,8 +17,9 @@ class ExportAssets(bpy.types.Operator):
 
     def execute(self, context):
         start = time.time()
-        bpy.context.scene.frame_current = 0
         props = context.scene.asset_settings
+
+        bpy.context.scene.frame_current = 0
         bpy.context.workspace.status_text_set_internal("Exporting assets...")
         export_path = Path(bpy.path.abspath(props.export_path))
 
