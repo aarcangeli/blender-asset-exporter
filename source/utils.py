@@ -98,3 +98,13 @@ def combine_children(name: str, mesh_object):
     ob = bpy.data.objects.new(name, mesh_data)
     bpy.context.scene.collection.objects.link(ob)
     return ob
+
+def get_or_create_export_collection():
+    """
+    Gets or creates the export collection in the current Blender scene.
+    """
+    collection = bpy.data.collections.get("Export")
+    if not collection:
+        collection = bpy.data.collections.new("Export")
+        bpy.context.scene.collection.children.link(collection)
+    return collection

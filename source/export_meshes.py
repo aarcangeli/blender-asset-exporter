@@ -3,7 +3,9 @@ from pathlib import Path
 
 import bpy
 
-from .utils import run_in_object_mode, combine_children, relevant_objects, FT_VertexAnimation
+from .utils import run_in_object_mode, combine_children, relevant_objects, FT_VertexAnimation, \
+    get_or_create_export_collection
+
 from .vertex_animation import export_vertex_animation, remove_debug_meshes
 
 
@@ -76,5 +78,6 @@ class ExportAssets(bpy.types.Operator):
 
 def list_meshes():
     """List all meshes in the current Blender scene."""
-    meshes = [obj for obj in bpy.data.objects if obj.type in relevant_objects and obj.export_properties.enable_export]
+    collection = get_or_create_export_collection()
+    meshes = [obj for obj in collection.objects if obj.type in relevant_objects and obj.export_properties.enable_export]
     return sorted(meshes, key=lambda x: x.name.lower())
