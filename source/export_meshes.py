@@ -79,5 +79,7 @@ class ExportAssets(bpy.types.Operator):
 def list_meshes():
     """List all meshes in the current Blender scene."""
     collection = get_or_create_export_collection()
-    meshes = [obj for obj in collection.objects if obj.type in relevant_objects and obj.export_properties.enable_export]
+    all_objects = list(collection.objects)
+    all_objects.extend([obj for it in collection.children_recursive for obj in it.objects])
+    meshes = [obj for obj in all_objects if obj.type in relevant_objects and obj.export_properties.enable_export]
     return sorted(meshes, key=lambda x: x.name.lower())
