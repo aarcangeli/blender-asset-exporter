@@ -39,14 +39,14 @@ jobs:
           echo "ID: $ID"
 
       - name: Create build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ steps.get_version.outputs.id }}-${{ steps.get_version.outputs.version }}
           path: source
 
   draft-release:
     name: Release Draft
-#    if: github.event_name != 'pull_request'
+    #    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -59,11 +59,6 @@ jobs:
         with:
           lfs: true
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ needs.build.outputs.id }}-${{ needs.build.outputs.version }}
-
       - name: Remove Old Release Drafts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -71,6 +66,10 @@ jobs:
           gh api repos/{owner}/{repo}/releases \
             --jq '.[] | select(.draft == true) | .id' \
             | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
+
+      - name: zip up the addon
+        run: |
+          zip -r "${{ needs.build.outputs.id }}-${{ needs.build.outputs.version }}.zip" source
 
       - name: Create Release Draft
         env:
