@@ -4,11 +4,7 @@ from contextlib import contextmanager
 import bpy
 import bmesh
 
-shelf_name = "Asset"
-relevant_objects = ["MESH", "EMPTY"]
-temp_suffix = "__temp__"
-
-FT_VertexAnimation = False
+from .constants import temp_suffix
 
 
 def show_message_box(message="", title="Message Box", icon="INFO"):

@@ -6,7 +6,7 @@ from mathutils import Vector
 import sys
 import time
 
-from .utils import shelf_name
+from .constants import shelf_name
 
 # Options
 last_print = 0

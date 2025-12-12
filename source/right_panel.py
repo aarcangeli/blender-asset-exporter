@@ -1,7 +1,8 @@
 import bpy
 
-from .export_meshes import ExportAssets
-from .utils import shelf_name, relevant_objects, FT_VertexAnimation
+from .export_assets import ExportAssets
+from .constants import shelf_name, relevant_objects
+from .vertex_animation import FT_VertexAnimation
 
 
 class VIEW3D_PT_GlobalSettings(bpy.types.Panel):
