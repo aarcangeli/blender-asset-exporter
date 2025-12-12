@@ -120,18 +120,21 @@ def auto_create_export_collection():
 
 
 def clean_dir_name(export_path: str) -> str:
+    if export_path == "":
+        export_path = "//"
+
     use_relative = export_path.startswith("//")
 
     # Use the correct separators
     separator = "/" if use_relative else os.path.sep
     export_path = export_path.replace("\\", "/").replace("/", separator)
 
-    # Ensure trailing "/"
-    if not export_path.endswith("/") and not export_path.endswith("\\"):
-        export_path += "/" if use_relative else os.path.sep
-
     # Remove trailing "/."
     if export_path.endswith("/.") or export_path.endswith("\\."):
         export_path = export_path[:-1]
+
+    # Ensure trailing "/"
+    if not export_path.endswith("/") and not export_path.endswith("\\"):
+        export_path += "/" if use_relative else os.path.sep
 
     return export_path

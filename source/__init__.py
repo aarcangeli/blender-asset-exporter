@@ -36,3 +36,6 @@ def register():
 def unregister():
     for cls in reversed(operator_classes):
         bpy.utils.unregister_class(cls)
+
+    bpy.types.Scene.asset_settings = None
+    bpy.types.Object.export_properties = None

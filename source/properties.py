@@ -20,12 +20,7 @@ def set_clean_path(self, new_path, use_relative):
 
 
 def update_path(self, new_path):
-    use_relative = self.use_relative_path
-
-    if use_relative and not new_path.startswith("//"):
-        use_relative = False
-
-    set_clean_path(self, new_path, use_relative)
+    self["export_path"] = clean_dir_name(new_path)
 
 
 class ExportSceneProperties(bpy.types.PropertyGroup):
@@ -35,7 +30,7 @@ class ExportSceneProperties(bpy.types.PropertyGroup):
     """
 
     export_path: bpy.props.StringProperty(
-        name="Output Path",
+        name="Global Output Path",
         description="Path to export assets to",
         options={"PATH_SUPPORTS_BLEND_RELATIVE"},
         default="//",
@@ -52,7 +47,7 @@ class ExportSceneProperties(bpy.types.PropertyGroup):
 
     # Duplicate property for custom get/set behavior
     export_path_prop: bpy.props.StringProperty(
-        name="Output Path",
+        name="Global Output Path",
         description="Path to export assets to",
         options={"PATH_SUPPORTS_BLEND_RELATIVE"},
         default="//",
