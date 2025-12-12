@@ -46,7 +46,7 @@ jobs:
 
   draft-release:
     name: Release Draft
-    #    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     permissions:
