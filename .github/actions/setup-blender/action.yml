@@ -45,3 +45,7 @@ runs:
     - name: Add Blender to PATH
       shell: bash
       run: echo "${{ inputs.dir }}" >> $GITHUB_PATH
+
+    - name: Verify Blender installation
+      shell: bash
+      run: blender --version
