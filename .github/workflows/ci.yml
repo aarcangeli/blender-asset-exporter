@@ -26,6 +26,9 @@ jobs:
       - name: Build and validate addon
         run: blender --command extension build --source-dir=./source
 
+      - name: Check out pre-commit hooks
+        uses: pre-commit/action@v3.0.1
+
       - name: Get version from blender_manifest.toml
         id: get_version
         run: |
@@ -46,7 +49,7 @@ jobs:
 
   draft-release:
     name: Release Draft
-    #    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     permissions:

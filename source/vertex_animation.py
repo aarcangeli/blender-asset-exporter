@@ -3,6 +3,9 @@ from pathlib import Path
 import bpy
 from mathutils import Vector
 
+# Enable this when the feature is stable
+FT_VertexAnimation = False
+
 
 def get_per_frame_mesh_data(context, mesh_object):
     """Return a list of combined mesh data per frame"""

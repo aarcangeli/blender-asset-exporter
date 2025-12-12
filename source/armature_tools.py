@@ -6,7 +6,7 @@ from mathutils import Vector
 import sys
 import time
 
-from .utils import shelf_name
+from .constants import shelf_name
 
 # Options
 last_print = 0
@@ -300,22 +300,40 @@ class AT_PT_ArmatureTools(bpy.types.Panel):
     bl_region_type = "UI"
     bl_category = shelf_name
 
+    @classmethod
+    def poll(self, context):
+        return context.mode == "POSE" and context.selected_pose_bones is not None
+
     def draw(self, context):
         layout = self.layout
 
         row = layout.row(align=True)
 
-        operator = row.operator("blendertools.toogle_constraint", text="Mute", icon="HIDE_ON")
+        operator = row.operator(AT_Constraint_Toogle.bl_idname, text="Mute", icon="HIDE_ON")
         operator.mute = True
 
-        operator = row.operator("blendertools.toogle_constraint", text="Unmute", icon="HIDE_OFF")
+        operator = row.operator(AT_Constraint_Toogle.bl_idname, text="Unmute", icon="HIDE_OFF")
         operator.mute = False
 
-        row = layout.row(align=True)
-        row.operator("blendertools.symmetrize")
+
+class AT_PT_MeshTools(bpy.types.Panel):
+    bl_label = "Mesh Tools"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_category = shelf_name
+
+    @classmethod
+    def poll(self, context):
+        return context.edit_object is not None and context.edit_object.type == "MESH"
+
+    def draw(self, context):
+        layout = self.layout
 
         row = layout.row(align=True)
-        row.operator("blendertools.tris_to_quads")
+        row.operator(AT_SymmetrizeTool.bl_idname)
+
+        row = layout.row(align=True)
+        row.operator(AT_TrisToQuads.bl_idname)
 
 
 armature_classes = [
@@ -323,4 +341,5 @@ armature_classes = [
     AT_SymmetrizeTool,
     AT_TrisToQuads,
     AT_PT_ArmatureTools,
+    AT_PT_MeshTools,
 ]

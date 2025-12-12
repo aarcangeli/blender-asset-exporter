@@ -3,10 +3,13 @@ from pathlib import Path
 
 import bpy
 
-from .utils import run_in_object_mode, combine_children, relevant_objects, FT_VertexAnimation, \
-    get_or_create_export_collection
-
-from .vertex_animation import export_vertex_animation, remove_debug_meshes
+from .utils import (
+    run_in_object_mode,
+    combine_children,
+    get_or_create_export_collection,
+)
+from .constants import relevant_objects
+from .vertex_animation import FT_VertexAnimation, export_vertex_animation, remove_debug_meshes
 
 
 class ExportAssets(bpy.types.Operator):
@@ -20,10 +23,10 @@ class ExportAssets(bpy.types.Operator):
 
     def execute(self, context):
         start = time.time()
-        props = context.scene.asset_settings
+        settings = context.scene.asset_settings
 
         bpy.context.workspace.status_text_set_internal("Exporting assets...")
-        export_path = Path(bpy.path.abspath(props.export_path))
+        export_path = Path(bpy.path.abspath(settings.export_path))
 
         remove_debug_meshes(context)
 
@@ -33,7 +36,7 @@ class ExportAssets(bpy.types.Operator):
             self.report({"INFO"}, f"Exporting mesh: '{mesh_object.name}' to '{file_output}'")
             count = count + 1
 
-            props = mesh_object.export_properties
+            settings = mesh_object.export_properties
 
             with run_in_object_mode():
                 temp_object = None
@@ -44,12 +47,10 @@ class ExportAssets(bpy.types.Operator):
                 mesh_object.name = f"{original_name}__temp__"
 
                 try:
-                    # bpy.context.scene.frame_current = 0
-
-                    if props.combine_child:
+                    if settings.combine_child:
                         mesh_object = temp_object = combine_children(original_name, mesh_object)
 
-                    if FT_VertexAnimation and props.vertex_animation:
+                    if FT_VertexAnimation and settings.vertex_animation:
                         # Experimental feature
                         mesh_object = export_vertex_animation(context, mesh_object, export_path)
 
@@ -72,7 +73,7 @@ class ExportAssets(bpy.types.Operator):
                     original_object.name = original_name
 
         elapsed = time.time() - start
-        bpy.context.workspace.status_text_set_internal(f"Exported {count} meshes in {elapsed:.2f} seconds.")
+        self.report({"INFO"}, f"Exported {count} meshes in {elapsed:.3f} seconds.")
         return {"FINISHED"}
 
 
