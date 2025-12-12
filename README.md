@@ -25,6 +25,8 @@ To quickly test changes, add the "source" directory as custom extension reposito
 
 Then enable the extension as normal.
 
+To reload the extension after making changes, use the "Reload Scripts" button.
+
 ## Rules
 
 - Always use relative imports within the source directory. ([doc](https://docs.blender.org/manual/en/latest/advanced/extensions/addons.html#relative-imports))
