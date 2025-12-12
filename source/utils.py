@@ -3,12 +3,11 @@ from contextlib import contextmanager
 import bpy
 import bmesh
 
-shelf_name = "Tools"
+shelf_name = "Asset"
 relevant_objects = ["MESH", "EMPTY"]
 temp_suffix = "__temp__"
 
 FT_VertexAnimation = False
-
 
 def show_message_box(message="", title="Message Box", icon="INFO"):
     def draw(self, context):
@@ -108,3 +107,9 @@ def get_or_create_export_collection():
         collection = bpy.data.collections.new("Export")
         bpy.context.scene.collection.children.link(collection)
     return collection
+
+def auto_create_export_collection():
+    """
+    Automatically creates the export collection if it doesn't exist.
+    """
+    get_or_create_export_collection()

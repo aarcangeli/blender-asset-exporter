@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build Addon
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+      id: ${{ steps.get_version.outputs.id }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Blender
+        uses: ./.github/actions/setup-blender
+        with:
+          version: "5.0.0"
+
+      - name: Build and validate addon
+        run: blender --command extension build --source-dir=./source
+
+      - name: Get version from blender_manifest.toml
+        id: get_version
+        run: |
+          VERSION=$(grep '^version =' source/blender_manifest.toml | cut -d'"' -f2)
+          ID=$(grep '^id =' source/blender_manifest.toml | cut -d'"' -f2)
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "id=$ID" >> $GITHUB_OUTPUT
+
+          echo "VERSION: $VERSION"
+          echo "ID: $ID"
+
+      - name: Create build artifacts
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ steps.get_version.outputs.id }}-${{ steps.get_version.outputs.version }}
+          path: source
+
+  draft-release:
+    name: Release Draft
+    #    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      # This step is required to use the `gh` CLI tool
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Remove Old Release Drafts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api repos/{owner}/{repo}/releases \
+            --jq '.[] | select(.draft == true) | .id' \
+            | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
+
+      - name: zip up the addon
+        run: |
+          zip -r "${{ needs.build.outputs.id }}-${{ needs.build.outputs.version }}.zip" source
+
+      - name: Create Release Draft
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
+        run: |
+          gh release create "v${{ needs.build.outputs.version }}" \
+            --draft \
+            --title "v${{ needs.build.outputs.version }}" \
+            --generate-notes \
+            "${{ needs.build.outputs.id }}-${{ needs.build.outputs.version }}.zip"

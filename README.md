@@ -1,39 +1,32 @@
 # Blender Asset Exporter
 
-Custom tool for exporting Blender assets to Unity
+Custom tool for exporting Blender assets to Unity.
 
-## How to build
+The project is not ready for production use.
 
-1. Make sure `blender` is in your `PATH`
+## Build from Source
+
+1. Make sure `blender` is installed and accessible from the command line.
+   You can verify this by running:
 
    ```bash
    blender --version
    ```
 
-2. Install Node.js and yarn
+2. Run the build command with Blender.
 
    ```bash
-   npm install -g yarn
+   blender --command extension build --source-dir=source
    ```
-
-3. Install dependencies
-
-   ```bash
-    yarn install
-    ```
-
-4. Build the extension
-
-    ```bash
-    yarn build
-    ```
 
 ## Development
 
-To quickly test changes, you can watch the source files and rebuild on changes:
+To quickly test changes, add the "source" directory as custom extension repository in Blender preferences.
 
-```bash
-yarn watch
-```
+Then enable the extension as normal.
 
-Make sure to re-install the extension in Blender after building.
+To reload the extension after making changes, use the "Reload Scripts" button.
+
+## Rules
+
+- Always use relative imports within the source directory. ([doc](https://docs.blender.org/manual/en/latest/advanced/extensions/addons.html#relative-imports))

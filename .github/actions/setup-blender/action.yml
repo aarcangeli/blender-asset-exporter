@@ -1,0 +1,51 @@
+name: "Setup Blender Portable"
+description: "Download, cache and add Blender portable to PATH"
+
+inputs:
+  version:
+    description: "Blender version (e.g. 5.0.0)"
+    required: true
+  dir:
+    description: "Directory where Blender will be extracted"
+    default: "${{github.workspace}}/blender"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Compute Blender URL
+      id: compute
+      shell: bash
+      run: |
+        VERSION="${{ inputs.version }}"
+        MAJOR=$(echo "$VERSION" | cut -d. -f1)
+        MINOR=$(echo "$VERSION" | cut -d. -f2)
+
+        URL="https://download.blender.org/release/Blender${MAJOR}.${MINOR}/blender-${VERSION}-linux-x64.tar.xz"
+
+        echo "url=$URL" >> $GITHUB_OUTPUT
+        echo "Blender URL: $URL"
+        echo "Download directory: ${{ inputs.dir }}"
+
+    - name: Cache Blender
+      uses: actions/cache@v5
+      id: cache-blender
+      with:
+        path: ${{ inputs.dir }}
+        key: blender-${{ runner.os }}-${{ inputs.version }}
+
+    - name: Download Blender
+      if: ${{ steps.cache-blender.outputs.cache-hit != 'true' }}
+      shell: bash
+      run: |
+        mkdir -p "${{ inputs.dir }}"
+        curl -L -o blender.tar.xz "${{ steps.compute.outputs.url }}"
+        tar -xf blender.tar.xz -C "${{ inputs.dir }}" --strip-components=1
+        rm blender.tar.xz
+
+    - name: Add Blender to PATH
+      shell: bash
+      run: echo "${{ inputs.dir }}" >> $GITHUB_PATH
+
+    - name: Verify Blender installation
+      shell: bash
+      run: blender --version
