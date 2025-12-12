@@ -1,6 +1,6 @@
 # Blender Asset Exporter
 
-Custom tool for exporting Blender assets to Unity.
+Custom tool for exporting Blender assets to Unity and Unreal Engine.
 
 The project is not ready for production use.
 
