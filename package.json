@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "build": "blender --command extension build --source-dir=./source",
-    "install": "yarn build && blender --command extension install-file -r user_default -e blender_asset_exporter-1.0.0.zip",
+    "blender-install": "yarn build && blender --command extension install-file -r user_default -e blender_asset_exporter-1.0.0.zip",
     "validate": "blender --command extension validate blender_asset_exporter-1.0.0.zip",
     "watch": "yarn build && chokidar source/**/*.py -c \"yarn build\""
   },

@@ -1,6 +1,6 @@
 schema_version = "1.0.0"
 
-id = "github.aarcangeli.asset_exporter"
+id = "aarcangeli_asset_exporter"
 version = "1.0.0"
 name = "aarcangeli Asset Exporter"
 tagline = "Custom tool for exporting Blender assets to Unity."
