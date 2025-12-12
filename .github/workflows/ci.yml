@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    name: Build Addon
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get_version.outputs.version }}
@@ -44,7 +45,7 @@ jobs:
           path: source
 
   draft-release:
-    name: Release draft
+    name: Release Draft
 #    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
@@ -52,6 +53,12 @@ jobs:
       contents: write
 
     steps:
+      # This step is required to use the `gh` CLI tool
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
