@@ -1,9 +1,0 @@
-{
-  "scripts": {
-    "build": "blender --command extension build --source-dir=source",
-    "watch": "yarn build && chokidar source/**/*.py -c \"yarn build\""
-  },
-  "dependencies": {
-    "chokidar-cli": "^3.0.0"
-  }
-}

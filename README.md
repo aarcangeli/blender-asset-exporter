@@ -1,6 +1,8 @@
 # Blender Asset Exporter
 
-Custom tool for exporting Blender assets to Unity
+Custom tool for exporting Blender assets to Unity.
+
+The project is not ready for production use.
 
 ## Build from Source
 
@@ -19,11 +21,10 @@ Custom tool for exporting Blender assets to Unity
 
 ## Development
 
-To quickly test changes, you can watch the source files and rebuild on changes:
+To quickly test changes, add the "source" directory as custom extension repository in Blender preferences.
 
-```bash
-yarn install
-yarn watch
-```
+Then enable the extension as normal.
 
-Make sure to re-install the extension in Blender after building.
+## Rules
+
+- Always use relative imports within the source directory. ([doc](https://docs.blender.org/manual/en/latest/advanced/extensions/addons.html#relative-imports))
