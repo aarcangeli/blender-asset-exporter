@@ -79,4 +79,5 @@ jobs:
           gh release create "v${{ needs.build.outputs.version }}" \
             --draft \
             --title "v${{ needs.build.outputs.version }}" \
-          )"
+            --generate-notes \
+            "${{ needs.build.outputs.id }}-${{ needs.build.outputs.version }}.zip"
