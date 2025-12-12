@@ -3,8 +3,13 @@ from pathlib import Path
 
 import bpy
 
-from .utils import run_in_object_mode, combine_children, relevant_objects, FT_VertexAnimation, \
-    get_or_create_export_collection
+from .utils import (
+    run_in_object_mode,
+    combine_children,
+    relevant_objects,
+    FT_VertexAnimation,
+    get_or_create_export_collection,
+)
 
 from .vertex_animation import export_vertex_animation, remove_debug_meshes
 
