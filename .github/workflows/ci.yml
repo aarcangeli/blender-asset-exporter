@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Setup Blender
+        uses: .github/actions/setup-blender
+        with:
+          version: "5.0.0"
+
+      - name: Build Project
+        run: yarn build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: "blender_asset_exporter-*.zip"
+          if-no-files-found: 'error'
+
+      - name: Create GitHub Release Draft
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="v${{ github.run_number }}"
+          RESPONSE=$(gh api repos/${{ github.repository }}/releases -f tag_name="$TAG_NAME" -f name="Build ${{ github.run_number }}" -f draft=true -f prerelease=false)
+          echo "release_id=$(echo "$RESPONSE" | jq -r .id)" >> $GITHUB_OUTPUT

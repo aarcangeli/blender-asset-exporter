@@ -2,15 +2,17 @@
 
 Custom tool for exporting Blender assets to Unity
 
-## How to build
+## Prerequisites
 
-1. Make sure `blender` is in your `PATH`
+1. Make sure `blender` and `node` are installed and available in your terminal.
 
    ```bash
    blender --version
+   node --version
+   npm --version
    ```
 
-2. Install Node.js and yarn
+2. Install yarn package manager if you don't have it already:
 
    ```bash
    npm install -g yarn
@@ -22,11 +24,11 @@ Custom tool for exporting Blender assets to Unity
     yarn install
     ```
 
-4. Build the extension
+## Building the Extension
 
-    ```bash
-    yarn build
-    ```
+```bash
+yarn build
+```
 
 ## Development
 
