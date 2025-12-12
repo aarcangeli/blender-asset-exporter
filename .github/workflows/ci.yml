@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: "blender_asset_exporter-*.zip"
+          path: "aarcangeli_asset_exporter-*.zip"
           if-no-files-found: 'error'
 
       - name: Create GitHub Release Draft
