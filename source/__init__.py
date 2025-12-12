@@ -3,12 +3,13 @@ import bpy
 from .auto_reload import reload_recursively_from
 from .armature_tools import armature_classes
 from .properties import ExportSceneProperties, ObjectProperties
-from .right_panel import VIEW3D_PT_AssetManager
+from .right_panel import VIEW3D_PT_GlobalSettings, VIEW3D_PT_AssetManager
 from .export_meshes import ExportAssets
 from .utils import auto_create_export_collection
 
 operator_classes = [
     ExportAssets,
+    VIEW3D_PT_GlobalSettings,
     VIEW3D_PT_AssetManager,
     ExportSceneProperties,
     ObjectProperties,

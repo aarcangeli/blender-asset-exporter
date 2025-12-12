@@ -1,3 +1,4 @@
+import os
 from contextlib import contextmanager
 
 import bpy
@@ -8,6 +9,7 @@ relevant_objects = ["MESH", "EMPTY"]
 temp_suffix = "__temp__"
 
 FT_VertexAnimation = False
+
 
 def show_message_box(message="", title="Message Box", icon="INFO"):
     def draw(self, context):
@@ -98,6 +100,7 @@ def combine_children(name: str, mesh_object):
     bpy.context.scene.collection.objects.link(ob)
     return ob
 
+
 def get_or_create_export_collection():
     """
     Gets or creates the export collection in the current Blender scene.
@@ -108,8 +111,27 @@ def get_or_create_export_collection():
         bpy.context.scene.collection.children.link(collection)
     return collection
 
+
 def auto_create_export_collection():
     """
     Automatically creates the export collection if it doesn't exist.
     """
     get_or_create_export_collection()
+
+
+def clean_dir_name(export_path: str) -> str:
+    use_relative = export_path.startswith("//")
+
+    # Use the correct separators
+    separator = "/" if use_relative else os.path.sep
+    export_path = export_path.replace("\\", "/").replace("/", separator)
+
+    # Ensure trailing "/"
+    if not export_path.endswith("/") and not export_path.endswith("\\"):
+        export_path += "/" if use_relative else os.path.sep
+
+    # Remove trailing "/."
+    if export_path.endswith("/.") or export_path.endswith("\\."):
+        export_path = export_path[:-1]
+
+    return export_path

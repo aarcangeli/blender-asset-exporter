@@ -4,11 +4,9 @@ from .export_meshes import ExportAssets
 from .utils import shelf_name, relevant_objects, FT_VertexAnimation
 
 
-class VIEW3D_PT_AssetManager(bpy.types.Panel):
-    """Shows a panel in the "Edit" tab of the 3D View"""
-
-    bl_label = "Asset Exporter"
-    bl_idname = "VIEW3D_PT_AssetManager"
+class VIEW3D_PT_GlobalSettings(bpy.types.Panel):
+    bl_label = "Asset Exporter Settings"
+    bl_idname = __package__ + ".VIEW3D_PT_GlobalSettings"
     bl_category = shelf_name
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -24,13 +22,32 @@ class VIEW3D_PT_AssetManager(bpy.types.Panel):
         layout = self.layout
         layout.column(align=True)
 
-        layout.label(text="Unity Asset Export", icon="EXPORT")
+        layout.label(text="Asset Manager", icon="EXPORT")
 
+        layout.prop(props, "use_relative_path")
+        layout.prop(props, "export_path_prop")
         layout.operator(ExportAssets.bl_idname)
-        layout.prop(props, "export_path")
+
+
+class VIEW3D_PT_AssetManager(bpy.types.Panel):
+    """Shows a panel in the "Edit" tab of the 3D View"""
+
+    bl_label = "Asset Exporter"
+    bl_idname = "VIEW3D_PT_AssetManager"
+    bl_category = shelf_name
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_options = set()
+
+    @classmethod
+    def poll(cls, context):
+        return get_active_object() is not None
+
+    def draw(self, context):
+        layout = self.layout
+        layout.column(align=True)
 
         if obj := get_active_object():
-            layout.separator()
             layout.label(text=obj.name, icon="OBJECT_DATA")
             export_properties = obj.export_properties
             layout.prop(export_properties, "enable_export")
